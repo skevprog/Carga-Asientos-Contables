@@ -5,7 +5,8 @@
  */
 package Proyecto;
 
-import static java.lang.Integer.parseInt;
+
+import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,15 +19,21 @@ public class Vista extends javax.swing.JFrame {
      * Creates new form Vista
      */
     static int t=0;
+    static int ref=1;
     DefaultTableModel modelo=new DefaultTableModel();
     
     
     public Vista() {
         initComponents();
         jTable.setModel(modelo);
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Referencia");
         modelo.addColumn("Cuenta");
         modelo.addColumn("Debe");
         modelo.addColumn("Haber");
+        
+        txtRef.setEditable(false);
+        txtRef.setText(Integer.toString(ref));
         this.setLocationRelativeTo(null);
     }
 
@@ -54,7 +61,7 @@ public class Vista extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jXDatePicker1 = new org.jdesktop.swingx.JXDatePicker();
+        datePicker = new org.jdesktop.swingx.JXDatePicker();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -133,7 +140,7 @@ public class Vista extends javax.swing.JFrame {
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jXDatePicker1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(datePicker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(cbCuentas, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(41, 41, 41)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,11 +158,11 @@ public class Vista extends javax.swing.JFrame {
                         .addContainerGap(23, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnImprimir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
@@ -178,24 +185,24 @@ public class Vista extends javax.swing.JFrame {
                         .addComponent(btnCarga)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jXDatePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton2)
                     .addComponent(btnImprimir)
                     .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(26, 26, 26))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaActionPerformed
-        
+        /*
         if(t==0){
             String [] s=new String [3];
         
@@ -206,37 +213,38 @@ public class Vista extends javax.swing.JFrame {
         modelo.addRow(s);
         t=1;
         }
-        
-        Object [] ingresos=new Object [3];                      // vector de objetos que pueda contener diferentes tipos
-        
-        
-        ingresos[0]=cbCuentas.getSelectedItem().toString();
-        ingresos[1]=txtDebe.getText();
-        ingresos[2]=txtHaber.getText();
-        
-        if(ingresos[1].equals("")){                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
-            ingresos[1]="";
-        }else{
-            ingresos[1]=Double.parseDouble(txtDebe.getText());
-        }
-        if(ingresos[2].equals("")){
-            ingresos[2].equals("");
-        }else{
-            ingresos[2]=Double.parseDouble(txtHaber.getText());
-        }
-        
-        modelo.addRow(ingresos);
-        
-        /*
-        String [] vec=new String [3];
-        
-        vec[0]=cbCuentas.getSelectedItem().toString();
-        vec[1]=txtDebe.getText();
-        vec[2]=txtHaber.getText();
-        
-        modelo.addRow(vec);
         */
         
+        /*
+        if(ref==1){
+            ingresos[1]=txtRef.getText();
+           ref=0;
+        }
+        */
+        
+        Object [] ingresos=new Object [5];                      // vector de objetos que pueda contener diferentes tipos
+        
+        ingresos[1]=txtRef.getText();
+        ingresos[2]=cbCuentas.getSelectedItem().toString();
+        ingresos[3]=txtDebe.getText();
+        ingresos[4]=txtHaber.getText();
+        
+        if(ingresos[3].equals("")){                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
+            ingresos[3]=0;
+        }else{
+            ingresos[3]=Double.parseDouble(txtDebe.getText());
+        }
+        if(ingresos[4].equals("")){
+            ingresos[4]=0;
+        }else{
+            ingresos[4]=Double.parseDouble(txtHaber.getText());
+        }
+        
+        modelo.addRow(ingresos);                                //se agrega el vector a la fila
+        
+        /*RESETEAR VALORES DE TEXTFIELDS HABER Y DEBE*/
+        txtDebe.setText("");
+        txtHaber.setText("");
     }//GEN-LAST:event_btnCargaActionPerformed
 
     private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
@@ -250,17 +258,25 @@ public class Vista extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
 
 /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/        
-        String [] s=new String [3];
+        String [] s=new String [5];
         
         s[0]=("");
         s[1]=("");
         s[2]=("");
+        s[3]=("");
+        s[4]=("");
         
         modelo.addRow(s);
         t=0;
         
-        
+/*SETEAR VALOR DE REF SECUENCIAL*/
+ref++;
+int acu=ref;
+txtRef.setText(Integer.toString(acu));
+
 /*SUMAR Y COMPARAR VALORES PARA PODER CERRAR EL ASIENTO*/
+
+
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -303,6 +319,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton btnCarga;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JComboBox<String> cbCuentas;
+    private org.jdesktop.swingx.JXDatePicker datePicker;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -313,7 +330,6 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;
-    private org.jdesktop.swingx.JXDatePicker jXDatePicker1;
     private javax.swing.JTextField txtDebe;
     private javax.swing.JTextField txtHaber;
     private javax.swing.JTextField txtRef;
