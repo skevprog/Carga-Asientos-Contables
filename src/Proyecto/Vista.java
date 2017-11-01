@@ -273,7 +273,7 @@ public class Vista extends javax.swing.JFrame {
         }
         
         System.out.println("el total del Debe es de: "+totalDebe);      //traza para comprobar
-        System.out.println("el total del haber es de: "+totalHaber);
+        System.out.println("el total del Haber es de: "+totalHaber);
         
         /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/
         String[] s = new String[5];
