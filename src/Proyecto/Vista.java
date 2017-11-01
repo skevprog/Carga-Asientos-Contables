@@ -8,6 +8,7 @@ package Proyecto;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -266,11 +267,17 @@ public class Vista extends javax.swing.JFrame {
         String referencia = txtRef.getText();
         
         for (int i = 0; i < modelo.getRowCount(); i++) {
-              if(modelo.getValueAt(i, 1).toString().equals(referencia)){
-                      
+              if(modelo.getValueAt(i, 1).toString().equals(referencia)){  
                       totalDebe+=(double) modelo.getValueAt(i, 3);           //se castea de double a objeto     
                       totalHaber+=(double) modelo.getValueAt(i, 4);
+                      
             }
+        }
+        
+        if(totalDebe==totalHaber){
+            JOptionPane.showMessageDialog(null,"Cierre exitoso");
+        }else{
+             JOptionPane.showMessageDialog(null,"Error");
         }
         
         System.out.println("el total del Debe es de: "+totalDebe);      //traza para comprobar
