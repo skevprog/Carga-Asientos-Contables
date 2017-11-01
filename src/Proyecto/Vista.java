@@ -260,6 +260,7 @@ public class Vista extends javax.swing.JFrame {
     private void btnCerrarAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarAsientoActionPerformed
         double totalDebe=0;
         double totalHaber=0;
+        double prueba;
         
         /*SUMAR Y COMPARAR VALORES PARA PODER CERRAR EL ASIENTO*/ //(en proceso)
         String referencia = txtRef.getText();
