@@ -274,6 +274,7 @@ public class Vista extends javax.swing.JFrame {
             }
         }
         
+        //En proceso
         if(totalDebe==totalHaber){
             JOptionPane.showMessageDialog(null,"Cierre exitoso");
         }else{
