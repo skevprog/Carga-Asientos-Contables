@@ -6,6 +6,8 @@
 package Proyecto;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 
@@ -222,8 +224,12 @@ public class Vista extends javax.swing.JFrame {
         }
         */
         
+        Date fecha=datePicker.getDate();
+        DateFormat fechDatePicker=new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
+       
         Object [] ingresos=new Object [5];                      // vector de objetos que pueda contener diferentes tipos
         
+        ingresos[0]=fechDatePicker.format(fecha);
         ingresos[1]=txtRef.getText();
         ingresos[2]=cbCuentas.getSelectedItem().toString();
         ingresos[3]=txtDebe.getText();
