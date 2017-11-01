@@ -5,7 +5,6 @@
  */
 package Proyecto;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,11 +19,10 @@ public class Vista extends javax.swing.JFrame {
     /**
      * Creates new form Vista
      */
-    static int t=0;
-    static int ref=1;
-    DefaultTableModel modelo=new DefaultTableModel();
-    
-    
+    static int t = 0;
+    static int ref = 1;
+    DefaultTableModel modelo = new DefaultTableModel();
+
     public Vista() {
         initComponents();
         jTable.setModel(modelo);
@@ -33,7 +31,7 @@ public class Vista extends javax.swing.JFrame {
         modelo.addColumn("Cuenta");
         modelo.addColumn("Debe");
         modelo.addColumn("Haber");
-        
+
         txtRef.setEditable(false);
         txtRef.setText(Integer.toString(ref));
         this.setLocationRelativeTo(null);
@@ -62,7 +60,7 @@ public class Vista extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnCerrarAsiento = new javax.swing.JButton();
         datePicker = new org.jdesktop.swingx.JXDatePicker();
         jLabel5 = new javax.swing.JLabel();
 
@@ -114,10 +112,10 @@ public class Vista extends javax.swing.JFrame {
 
         btnImprimir.setText("Imprimir");
 
-        jButton3.setText("Cerrar Asiento");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnCerrarAsiento.setText("Cerrar Asiento");
+        btnCerrarAsiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnCerrarAsientoActionPerformed(evt);
             }
         });
 
@@ -156,7 +154,7 @@ public class Vista extends javax.swing.JFrame {
                         .addComponent(btnCarga)
                         .addGap(44, 44, 44))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(btnCerrarAsiento)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -192,7 +190,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
+                    .addComponent(btnCerrarAsiento)
                     .addComponent(jButton2)
                     .addComponent(btnImprimir)
                     .addComponent(jButton1))
@@ -214,76 +212,97 @@ public class Vista extends javax.swing.JFrame {
         modelo.addRow(s);
         t=1;
         }
-        */
-        
-        /*
+         */
+
+ /*
         if(ref==1){
             ingresos[1]=txtRef.getText();
            ref=0;
         }
-        */
-        
-        Date fecha=datePicker.getDate();
-        DateFormat fechDatePicker=new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
-       
-        Object [] ingresos=new Object [5];                      // vector de objetos que pueda contener diferentes tipos
-        
-        ingresos[0]=fechDatePicker.format(fecha);
-        ingresos[1]=txtRef.getText();
-        ingresos[2]=cbCuentas.getSelectedItem().toString();
-        ingresos[3]=txtDebe.getText();
-        ingresos[4]=txtHaber.getText();
-        
-        if(ingresos[3].equals("")){                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
-            ingresos[3]=0;
-        }else{
-            ingresos[3]=Double.parseDouble(txtDebe.getText());
+         */
+        Date fecha = datePicker.getDate();
+        DateFormat fechDatePicker = new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
+
+        Object[] ingresos = new Object[5];                      // vector de objetos que pueda contener diferentes tipos
+
+        ingresos[0] = fechDatePicker.format(fecha);
+        ingresos[1] = txtRef.getText();
+        ingresos[2] = cbCuentas.getSelectedItem().toString();
+        ingresos[3] = txtDebe.getText();
+        ingresos[4] = txtHaber.getText();
+
+        if (ingresos[3].equals("")) {                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
+            ingresos[3] = 0;
+        } else {
+            ingresos[3] = Double.parseDouble(txtDebe.getText());
         }
-        if(ingresos[4].equals("")){
-            ingresos[4]=0;
-        }else{
-            ingresos[4]=Double.parseDouble(txtHaber.getText());
+        if (ingresos[4].equals("")) {
+            ingresos[4] = 0;
+        } else {
+            ingresos[4] = Double.parseDouble(txtHaber.getText());
         }
-        
+
         modelo.addRow(ingresos);                                //se agrega el vector a la fila
-        
+
         /*RESETEAR VALORES DE TEXTFIELDS HABER Y DEBE*/
         txtDebe.setText("");
         txtHaber.setText("");
     }//GEN-LAST:event_btnCargaActionPerformed
 
     private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
-        
+
     }//GEN-LAST:event_txtDebeActionPerformed
 
     private void cbCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCuentasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCuentasActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnCerrarAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarAsientoActionPerformed
+        double totalDebe=0;
+        double totalHaber=0;
+        
+        /*SUMAR Y COMPARAR VALORES PARA PODER CERRAR EL ASIENTO*/ //(en proceso)
+        String referencia = txtRef.getText();
+        
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+              if(modelo.getValueAt(i, 1).toString().equals(referencia)){
+                      
+                      totalDebe+=(double) modelo.getValueAt(i, 3);           //se castea de double a objeto     
+                      totalHaber+=(double) modelo.getValueAt(i, 4);
+            }
+        }
+        
+        System.out.println("el total del Debe es de: "+totalDebe);      //traza para comprobar
+        System.out.println("el total del haber es de: "+totalHaber);
+        
+        /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/
+        String[] s = new String[5];
 
-/*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/        
-        String [] s=new String [5];
-        
-        s[0]=("");
-        s[1]=("");
-        s[2]=("");
-        s[3]=("");
-        s[4]=("");
-        
+        s[0] = ("");
+        s[1] = ("");
+        s[2] = ("");
+        s[3] = ("");
+        s[4] = ("");
+
         modelo.addRow(s);
-        t=0;
+        t = 0;
+
+        /*SETEAR VALOR DE REF SECUENCIAL*/
+        ref++;
+        int acu = ref;
+        txtRef.setText(Integer.toString(acu));
+
         
-/*SETEAR VALOR DE REF SECUENCIAL*/
-ref++;
-int acu=ref;
-txtRef.setText(Integer.toString(acu));
+       
+        
+        
+            
+       
+         
+        
+        
 
-/*SUMAR Y COMPARAR VALORES PARA PODER CERRAR EL ASIENTO*/
-
-
-
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnCerrarAsientoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -322,12 +341,12 @@ txtRef.setText(Integer.toString(acu));
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCarga;
+    private javax.swing.JButton btnCerrarAsiento;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JComboBox<String> cbCuentas;
     private org.jdesktop.swingx.JXDatePicker datePicker;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
