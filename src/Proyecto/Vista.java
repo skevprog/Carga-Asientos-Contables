@@ -69,6 +69,12 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel1.setText("Ref N°:");
 
+        txtRef.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRefActionPerformed(evt);
+            }
+        });
+
         cbCuentas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Caja", "Rodado", "Mercaderia", "Proveedor", " " }));
         cbCuentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -202,6 +208,7 @@ public class Vista extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaActionPerformed
+
         /*
         if(t==0){
             String [] s=new String [3];
@@ -222,6 +229,12 @@ public class Vista extends javax.swing.JFrame {
         }
          */
         Date fecha = datePicker.getDate();
+        
+        
+        if(fecha == null){                                                      //validacion Fecha
+            JOptionPane.showMessageDialog(null, "Debe ingresar una fecha");
+        }else{
+            
         DateFormat fechDatePicker = new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
 
         Object[] ingresos = new Object[5];                      // vector de objetos que pueda contener diferentes tipos
@@ -233,18 +246,18 @@ public class Vista extends javax.swing.JFrame {
         ingresos[4] = txtHaber.getText();
 
         if (ingresos[3].equals("")) {                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
-            ingresos[3] = 0;
+            ingresos[3] = (double) 0;
         } else {
             ingresos[3] = Double.parseDouble(txtDebe.getText());
         }
         if (ingresos[4].equals("")) {
-            ingresos[4] = 0;
+            ingresos[4] = (double) 0;
         } else {
             ingresos[4] = Double.parseDouble(txtHaber.getText());
         }
-
+        
         modelo.addRow(ingresos);                                //se agrega el vector a la fila
-
+        }
         /*RESETEAR VALORES DE TEXTFIELDS HABER Y DEBE*/
         txtDebe.setText("");
         txtHaber.setText("");
@@ -259,31 +272,29 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_cbCuentasActionPerformed
 
     private void btnCerrarAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarAsientoActionPerformed
-        double totalDebe=0;
-        double totalHaber=0;
-        double prueba;
-        
+        double totalDebe = 0.0;
+        double totalHaber = 0.0;
+
         /*SUMAR Y COMPARAR VALORES PARA PODER CERRAR EL ASIENTO*/ //(en proceso)
         String referencia = txtRef.getText();
-        
+
         for (int i = 0; i < modelo.getRowCount(); i++) {
-              if(modelo.getValueAt(i, 1).toString().equals(referencia)){  
-                      totalDebe+=(double) modelo.getValueAt(i, 3);           //se castea de double a objeto     
-                      totalHaber+=(double) modelo.getValueAt(i, 4);
-                      
+            if (modelo.getValueAt(i, 1).toString().equals(referencia)) {
+                totalDebe += (double) modelo.getValueAt(i, 3);           //se castea de double a objeto     
+                totalHaber += (double) modelo.getValueAt(i, 4);
             }
         }
-        
+
         //En proceso
-        if(totalDebe==totalHaber){
-            JOptionPane.showMessageDialog(null,"Cierre exitoso");
-        }else{
-             JOptionPane.showMessageDialog(null,"Error");
+        if (totalDebe == totalHaber) {
+            JOptionPane.showMessageDialog(null, "Cierre exitoso");
+        } else {
+            JOptionPane.showMessageDialog(null, "Error, el total del Haber debe ser igual al debe");
+            btnCerrarAsiento.setEnabled(false);
         }
-        
-        System.out.println("el total del Debe es de: "+totalDebe);      //traza para comprobar
-        System.out.println("el total del Haber es de:: "+totalHaber);
-        
+
+        //System.out.println("el total del Debe es de: "+totalDebe);      //traza para comprobar
+        //System.out.println("el total del Haber es de:: "+totalHaber);
         /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/
         String[] s = new String[5];
 
@@ -301,17 +312,12 @@ public class Vista extends javax.swing.JFrame {
         int acu = ref;
         txtRef.setText(Integer.toString(acu));
 
-        
-       
-        
-        
-            
-       
-         
-        
-        
 
     }//GEN-LAST:event_btnCerrarAsientoActionPerformed
+
+    private void txtRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRefActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRefActionPerformed
 
     /**
      * @param args the command line arguments
