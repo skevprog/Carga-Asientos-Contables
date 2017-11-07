@@ -5,10 +5,21 @@
  */
 package Proyecto;
 
+import com.sun.rowset.internal.Row;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javafx.scene.control.Cell;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -35,6 +46,9 @@ public class Vista extends javax.swing.JFrame {
 
         txtRef.setEditable(false);
         txtRef.setText(Integer.toString(ref));
+        txtDebe.setText("0");
+        txtHaber.setText("0");
+        
         this.setLocationRelativeTo(null);
     }
 
@@ -84,9 +98,25 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel2.setText("Cuenta");
 
+        txtDebe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtDebeMouseClicked(evt);
+            }
+        });
         txtDebe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDebeActionPerformed(evt);
+            }
+        });
+
+        txtHaber.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtHaberMouseClicked(evt);
+            }
+        });
+        txtHaber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHaberActionPerformed(evt);
             }
         });
 
@@ -118,6 +148,11 @@ public class Vista extends javax.swing.JFrame {
         jButton2.setText("Editar");
 
         btnImprimir.setText("Imprimir");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         btnCerrarAsiento.setText("Cerrar Asiento");
         btnCerrarAsiento.addActionListener(new java.awt.event.ActionListener() {
@@ -209,68 +244,50 @@ public class Vista extends javax.swing.JFrame {
 
     private void btnCargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaActionPerformed
 
-        /*
-        if(t==0){
-            String [] s=new String [3];
-        
-        s[0]=("***********************");
-        s[1]=(" ref: "+txtRef.getText());
-        s[2]=("***********************");
-        
-        modelo.addRow(s);
-        t=1;
-        }
-         */
-
- /*
-        if(ref==1){
-            ingresos[1]=txtRef.getText();
-           ref=0;
-        }
-         */
+        double haber=Double.parseDouble(txtHaber.getText());         
+        double debe=Double.parseDouble(txtDebe.getText());
         Date fecha = datePicker.getDate();
-        
-        
-        if(fecha == null){                                                      //validacion Fecha
+
+        if (fecha == null) {                                                      //validacion Fecha
             JOptionPane.showMessageDialog(null, "Debe ingresar una fecha");
-        }else{
-            
-        DateFormat fechDatePicker = new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
+    
+        } else if (debe < 0 || haber < 0) {
+            JOptionPane.showMessageDialog(null, "Error");
+        }else    {
+            DateFormat fechDatePicker = new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
 
-        Object[] ingresos = new Object[5];                      // vector de objetos que pueda contener diferentes tipos
+            Object[] ingresos = new Object[5];                      // vector de objetos que pueda contener diferentes tipos
 
-        ingresos[0] = fechDatePicker.format(fecha);
-        ingresos[1] = txtRef.getText();
-        ingresos[2] = cbCuentas.getSelectedItem().toString();
-        ingresos[3] = txtDebe.getText();
-        ingresos[4] = txtHaber.getText();
+            ingresos[0] = fechDatePicker.format(fecha);
+            ingresos[1] = txtRef.getText();
+            ingresos[2] = cbCuentas.getSelectedItem().toString();
 
-        if (ingresos[3].equals("")) {                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
-            ingresos[3] = (double) 0;
-        } else {
-            ingresos[3] = Double.parseDouble(txtDebe.getText());
-        }
-        if (ingresos[4].equals("")) {
-            ingresos[4] = (double) 0;
-        } else {
-            ingresos[4] = Double.parseDouble(txtHaber.getText());
-        }
-        
-        modelo.addRow(ingresos);                                //se agrega el vector a la fila
+            ingresos[3] = txtDebe.getText();
+
+            if (ingresos[3].equals("0")) {                               //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
+                ingresos[3] = (double) 0;
+            } else {
+                ingresos[3] = Double.parseDouble(txtDebe.getText());
+            }
+            ingresos[4] = txtHaber.getText();
+            if (ingresos[4].equals("0")) {                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
+                ingresos[4] = (double) 0;
+            } else {
+                ingresos[4] = Double.parseDouble(txtHaber.getText());
+            }
+
+            modelo.addRow(ingresos);                                //se agrega el vector a la fila
         }
         /*RESETEAR VALORES DE TEXTFIELDS HABER Y DEBE*/
-        txtDebe.setText("");
-        txtHaber.setText("");
+        txtDebe.setText("0");
+        txtHaber.setText("0");
+        
     }//GEN-LAST:event_btnCargaActionPerformed
-
-    private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
-
-    }//GEN-LAST:event_txtDebeActionPerformed
 
     private void cbCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCuentasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCuentasActionPerformed
-
+ 
     private void btnCerrarAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarAsientoActionPerformed
         double totalDebe = 0.0;
         double totalHaber = 0.0;
@@ -286,38 +303,114 @@ public class Vista extends javax.swing.JFrame {
         }
 
         //En proceso
-        if (totalDebe == totalHaber) {
+        if (totalDebe == totalHaber && totalDebe > 0 && totalHaber > 0) {
             JOptionPane.showMessageDialog(null, "Cierre exitoso");
+            /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/
+            String[] s = new String[5];
+
+            s[0] = ("");
+            s[1] = ("");
+            s[2] = ("");
+            s[3] = ("");
+            s[4] = ("");
+
+            modelo.addRow(s);
+            t = 0;
+
+            /*SETEAR VALOR DE REF SECUENCIAL*/
+            ref++;
+            int acu = ref;
+            txtRef.setText(Integer.toString(acu));
         } else {
             JOptionPane.showMessageDialog(null, "Error, el total del Haber debe ser igual al debe");
-            btnCerrarAsiento.setEnabled(false);
+            //btnCerrarAsiento.setEnabled(false);
         }
 
         //System.out.println("el total del Debe es de: "+totalDebe);      //traza para comprobar
         //System.out.println("el total del Haber es de:: "+totalHaber);
-        /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/
-        String[] s = new String[5];
-
-        s[0] = ("");
-        s[1] = ("");
-        s[2] = ("");
-        s[3] = ("");
-        s[4] = ("");
-
-        modelo.addRow(s);
-        t = 0;
-
-        /*SETEAR VALOR DE REF SECUENCIAL*/
-        ref++;
-        int acu = ref;
-        txtRef.setText(Integer.toString(acu));
-
 
     }//GEN-LAST:event_btnCerrarAsientoActionPerformed
 
     private void txtRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRefActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRefActionPerformed
+
+    public String [][] obtenerInformacion(){
+        int numFilas=modelo.getRowCount();
+        int numColumnas=modelo.getColumnCount();
+        boolean isCapturedTheTitles=false;
+        String matrix[][]=new String[numFilas+1][numColumnas];
+        for (int rowIndex = 0; rowIndex < numFilas; rowIndex++) {
+            for (int colIndex = 0; colIndex < numColumnas; colIndex++) {
+                if(!isCapturedTheTitles){
+                   matrix[0][colIndex]=modelo.getColumnName(colIndex);
+                   isCapturedTheTitles=(rowIndex>0)?true:false;
+                }
+                matrix[rowIndex+1][colIndex]=modelo.getValueAt(rowIndex, colIndex).toString();
+                
+            }
+            
+        }
+        return matrix;
+    }
+    
+    
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        JFileChooser fileChooser =new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int resultado = fileChooser.showSaveDialog(this);
+        if(resultado== JFileChooser.CANCEL_OPTION){
+            return;
+        }
+        
+        File archivo=fileChooser.getSelectedFile();
+        
+        try{
+            PrintWriter salida=new PrintWriter(new FileWriter(archivo+".csv"));
+            String data[][]=obtenerInformacion();
+            for (int i = 0; i < data.length; i++) {
+                salida.print(data[i][0]);
+                for (int j = 1; j < data[i].length; j++) {
+                    String word=data[i][j];
+                    if(word!=null){
+                        salida.print("," +word);
+                    }else{
+                        salida.print(",");
+                    }
+                }
+                salida.println();
+            }
+            salida.close();
+        }catch(IOException io){
+            
+        }
+    }//GEN-LAST:event_btnImprimirActionPerformed
+
+    private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
+
+    }//GEN-LAST:event_txtDebeActionPerformed
+
+    private void txtHaberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtHaberMouseClicked
+       if(txtHaber.hasFocus()==true){
+           txtHaber.setEditable(true);
+           txtHaber.setText("");
+            txtDebe.setText("0");
+            txtDebe.setEditable(false);
+        }
+    }//GEN-LAST:event_txtHaberMouseClicked
+
+    private void txtDebeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDebeMouseClicked
+        if(txtDebe.hasFocus()==true){
+            txtDebe.setEditable(true);
+            txtDebe.setText("");
+            txtHaber.setText("0");
+            txtHaber.setEditable(false);
+        }
+    }//GEN-LAST:event_txtDebeMouseClicked
+
+    private void txtHaberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHaberActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHaberActionPerformed
 
     /**
      * @param args the command line arguments
