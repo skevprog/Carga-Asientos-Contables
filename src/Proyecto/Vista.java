@@ -104,6 +104,11 @@ public class Vista extends javax.swing.JFrame {
                 txtDebeActionPerformed(evt);
             }
         });
+        txtDebe.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDebeKeyTyped(evt);
+            }
+        });
 
         txtHaber.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -113,6 +118,11 @@ public class Vista extends javax.swing.JFrame {
         txtHaber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtHaberActionPerformed(evt);
+            }
+        });
+        txtHaber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtHaberKeyTyped(evt);
             }
         });
 
@@ -339,26 +349,6 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRefActionPerformed
 
-    public String[][] obtenerInformacion() {
-        int numFilas = modelo.getRowCount();
-        int numColumnas = modelo.getColumnCount();
-        boolean isCapturedTheTitles = false;
-        String matrix[][] = new String[numFilas + 1][numColumnas];
-        for (int rowIndex = 0; rowIndex < numFilas; rowIndex++) {
-            for (int colIndex = 0; colIndex < numColumnas; colIndex++) {
-                if (!isCapturedTheTitles) {
-                    matrix[0][colIndex] = modelo.getColumnName(colIndex);
-                    isCapturedTheTitles = (rowIndex > 0) ? true : false;
-                }
-                matrix[rowIndex + 1][colIndex] = modelo.getValueAt(rowIndex, colIndex).toString();
-
-            }
-
-        }
-        return matrix;
-    }
-
-
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         /*
         String arr[] = {"Debe", "Haber"};
@@ -392,37 +382,73 @@ public class Vista extends javax.swing.JFrame {
             System.out.println(deb.get(i) + "   " + hab.get(i));
         }
          */
-        //buscar("Caja",deb,hab);
-        buscar("Acciones", deb, hab);
+        buscar();
+
 
     }//GEN-LAST:event_btnImprimirActionPerformed
-    public void buscar(String s, ArrayList arr1, ArrayList arr2) {
+    public void buscar() {
+        ArrayList<Double> arrCajHaber = new ArrayList<>();
+        ArrayList<Double> arrCajDebe = new ArrayList<>();
+                            ArrayList<Double> arrAccHaber = new ArrayList<>();
+                    ArrayList<Double> arrAccDebe = new ArrayList<>();
+
         String arr[] = {"Debe", "Haber"};
         double debe;
         double haber;
 
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            if (i == 0) {
-                System.out.print(arr[0] + "  " + arr[1]);
-                System.out.println("");
-            }
-            if (modelo.getValueAt(i, 2).equals(s)) {
 
-                debe = (double) modelo.getValueAt(i, 3);
-                haber = (double) modelo.getValueAt(i, 4);
-                if (debe != 0.0) {
-                    arr1.add(debe);
-                }
-                if (haber != 0) {
-                    arr2.add(haber);
-                }
-            }
+            String cuenta = (String) modelo.getValueAt(i, 2);
 
+            switch (cuenta) {
+
+                case "Caja":
+
+                    debe = (double) modelo.getValueAt(i, 3);
+                    haber = (double) modelo.getValueAt(i, 4);
+                    if (debe != 0.0) {
+                        arrCajHaber.add(debe);
+                    }
+                    if (haber != 0) {
+                        arrCajDebe.add(haber);
+                    }
+                    ;
+                    break;
+                case "Acciones":
+
+                    debe = (double) modelo.getValueAt(i, 3);
+                    haber = (double) modelo.getValueAt(i, 4);
+                    if (debe != 0.0) {
+                        arrAccHaber.add(debe);
+                    }
+                    if (haber != 0) {
+                        arrAccDebe.add(haber);
+                    }
+                    ;
+                    break;
+                    
+                default: System.out.println("error");
+                break;
+            }
         }
 
-        for (int i = 0; i < arr1.size(); i++) {                  //imprimir valores del primer array al lado del otro
-            System.out.println(arr1.get(i) + "   " + arr2.get(i));
+        
+        
+        for (int i = 0; i < arrCajHaber.size(); i++) {                  //imprimir valores del primer array al lado del otro
+            if(i==0){
+                System.out.println("Caja");
+            }
+            System.out.println(arrCajHaber.get(i) + "   " + arrCajDebe.get(i));
         }
+
+        
+        for (int i = 0; i < arrAccHaber.size(); i++) {                  //imprimir valores del primer array al lado del otro
+            if(i==0){
+                System.out.println("Acciones");
+            }
+            System.out.println(arrAccHaber.get(i) + "   " + arrAccDebe.get(i));
+        }
+        
     }
     private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
 
@@ -453,6 +479,33 @@ public class Vista extends javax.swing.JFrame {
     private void datePickerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datePickerMouseClicked
 
     }//GEN-LAST:event_datePickerMouseClicked
+
+    private void txtDebeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDebeKeyTyped
+        char c = evt.getKeyChar();          //se obtiene la letra ingresada
+
+        if (Character.isLetter(c)) {         //se valida si es un numero
+            getToolkit().beep();
+
+            evt.consume();
+
+            JOptionPane.showMessageDialog(null, "Solo debe escribir números");
+           txtDebe.setText("0");
+
+        }     }//GEN-LAST:event_txtDebeKeyTyped
+
+    private void txtHaberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHaberKeyTyped
+       char c = evt.getKeyChar();          //se obtiene la letra ingresada
+
+        if (Character.isLetter(c)) {         //se valida si es un numero
+            getToolkit().beep();            //sonido de error
+
+            evt.consume();
+
+            JOptionPane.showMessageDialog(null, "Solo debe escribir números");
+           txtHaber.setText("0");
+
+        } 
+    }//GEN-LAST:event_txtHaberKeyTyped
 
     /**
      * @param args the command line arguments
