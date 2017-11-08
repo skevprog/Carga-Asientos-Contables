@@ -5,21 +5,17 @@
  */
 package Proyecto;
 
-import com.sun.rowset.internal.Row;
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileOutputStream;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import javafx.scene.control.Cell;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -43,12 +39,12 @@ public class Vista extends javax.swing.JFrame {
         modelo.addColumn("Cuenta");
         modelo.addColumn("Debe");
         modelo.addColumn("Haber");
-        
+
         txtRef.setEditable(false);
         txtRef.setText(Integer.toString(ref));
         txtDebe.setText("0");
         txtHaber.setText("0");
-        
+
         this.setLocationRelativeTo(null);
     }
 
@@ -147,7 +143,7 @@ public class Vista extends javax.swing.JFrame {
 
         jButton2.setText("Editar");
 
-        btnImprimir.setText("Imprimir");
+        btnImprimir.setText("Imprimir Mayor");
         btnImprimir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnImprimirActionPerformed(evt);
@@ -251,16 +247,16 @@ public class Vista extends javax.swing.JFrame {
 
     private void btnCargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaActionPerformed
 
-        double haber=Double.parseDouble(txtHaber.getText());         
-        double debe=Double.parseDouble(txtDebe.getText());
+        double haber = Double.parseDouble(txtHaber.getText());
+        double debe = Double.parseDouble(txtDebe.getText());
         Date fecha = datePicker.getDate();
 
         if (fecha == null) {                                                      //validacion Fecha
             JOptionPane.showMessageDialog(null, "Debe ingresar una fecha");
-    
+
         } else if (debe < 0 || haber < 0) {
             JOptionPane.showMessageDialog(null, "Error");
-        }else    {
+        } else {
             DateFormat fechDatePicker = new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
 
             Object[] ingresos = new Object[5];                      // vector de objetos que pueda contener diferentes tipos
@@ -271,13 +267,13 @@ public class Vista extends javax.swing.JFrame {
 
             ingresos[3] = txtDebe.getText();
 
-            if (ingresos[3].equals("0") || ingresos[3].equals("") ) {                               //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
+            if (ingresos[3].equals("0") || ingresos[3].equals("")) {                               //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
                 ingresos[3] = (double) 0;
             } else {
                 ingresos[3] = Double.parseDouble(txtDebe.getText());
             }
             ingresos[4] = txtHaber.getText();
-            
+
             if (ingresos[4].equals("0")) {                             //Si el campo de texto esta vacio, pasar elemento vacio al jtable. Si no se produce error (no parsea nada)            
                 ingresos[4] = (double) 0;
             } else {
@@ -289,13 +285,13 @@ public class Vista extends javax.swing.JFrame {
         /*RESETEAR VALORES DE TEXTFIELDS HABER Y DEBE*/
         txtDebe.setText("0");
         txtHaber.setText("0");
-        
+
     }//GEN-LAST:event_btnCargaActionPerformed
 
     private void cbCuentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCuentasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbCuentasActionPerformed
- 
+
     private void btnCerrarAsientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarAsientoActionPerformed
         double totalDebe = 0.0;
         double totalHaber = 0.0;
@@ -343,72 +339,106 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRefActionPerformed
 
-    public String [][] obtenerInformacion(){
-        int numFilas=modelo.getRowCount();
-        int numColumnas=modelo.getColumnCount();
-        boolean isCapturedTheTitles=false;
-        String matrix[][]=new String[numFilas+1][numColumnas];
+    public String[][] obtenerInformacion() {
+        int numFilas = modelo.getRowCount();
+        int numColumnas = modelo.getColumnCount();
+        boolean isCapturedTheTitles = false;
+        String matrix[][] = new String[numFilas + 1][numColumnas];
         for (int rowIndex = 0; rowIndex < numFilas; rowIndex++) {
             for (int colIndex = 0; colIndex < numColumnas; colIndex++) {
-                if(!isCapturedTheTitles){
-                   matrix[0][colIndex]=modelo.getColumnName(colIndex);
-                   isCapturedTheTitles=(rowIndex>0)?true:false;
+                if (!isCapturedTheTitles) {
+                    matrix[0][colIndex] = modelo.getColumnName(colIndex);
+                    isCapturedTheTitles = (rowIndex > 0) ? true : false;
                 }
-                matrix[rowIndex+1][colIndex]=modelo.getValueAt(rowIndex, colIndex).toString();
-                
+                matrix[rowIndex + 1][colIndex] = modelo.getValueAt(rowIndex, colIndex).toString();
+
             }
-            
+
         }
         return matrix;
     }
-    
-    
+
+
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        JFileChooser fileChooser =new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int resultado = fileChooser.showSaveDialog(this);
-        if(resultado== JFileChooser.CANCEL_OPTION){
-            return;
-        }
-        
-        File archivo=fileChooser.getSelectedFile();
-        
-        try{
-            PrintWriter salida=new PrintWriter(new FileWriter(archivo+".csv"));
-            String data[][]=obtenerInformacion();
-            for (int i = 0; i < data.length; i++) {
-                salida.print(data[i][0]);
-                for (int j = 1; j < data[i].length; j++) {
-                    String word=data[i][j];
-                    if(word!=null){
-                        salida.print("," +word);
-                    }else{
-                        salida.print(",");
-                    }
+        /*
+        String arr[] = {"Debe", "Haber"};
+        double debeCaja;
+        double haberCaja;
+         */
+        ArrayList<Double> deb = new ArrayList<>();
+        ArrayList<Double> hab = new ArrayList<>();
+
+        /*
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+
+            if (modelo.getValueAt(i, 2).equals("Caja")) {
+                if (i == 0) {
+                    System.out.print(arr[0] + "  " + arr[1]);
+                    System.out.println("");
                 }
-                salida.println();
+                debeCaja = (double) modelo.getValueAt(i, 3);
+                haberCaja = (double) modelo.getValueAt(i, 4);
+                if (debeCaja != 0.0) {
+                    deb.add(debeCaja);
+                }
+                if (haberCaja != 0) {
+                    hab.add(haberCaja);
+                }
             }
-            salida.close();
-        }catch(IOException io){
             
         }
-    }//GEN-LAST:event_btnImprimirActionPerformed
 
+        for (int i = 0; i < deb.size(); i++) {                  //imprimir valores del primer array al lado del otro
+            System.out.println(deb.get(i) + "   " + hab.get(i));
+        }
+         */
+        //buscar("Caja",deb,hab);
+        buscar("Acciones", deb, hab);
+
+    }//GEN-LAST:event_btnImprimirActionPerformed
+    public void buscar(String s, ArrayList arr1, ArrayList arr2) {
+        String arr[] = {"Debe", "Haber"};
+        double debe;
+        double haber;
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            if (i == 0) {
+                System.out.print(arr[0] + "  " + arr[1]);
+                System.out.println("");
+            }
+            if (modelo.getValueAt(i, 2).equals(s)) {
+
+                debe = (double) modelo.getValueAt(i, 3);
+                haber = (double) modelo.getValueAt(i, 4);
+                if (debe != 0.0) {
+                    arr1.add(debe);
+                }
+                if (haber != 0) {
+                    arr2.add(haber);
+                }
+            }
+
+        }
+
+        for (int i = 0; i < arr1.size(); i++) {                  //imprimir valores del primer array al lado del otro
+            System.out.println(arr1.get(i) + "   " + arr2.get(i));
+        }
+    }
     private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
 
     }//GEN-LAST:event_txtDebeActionPerformed
 
     private void txtHaberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtHaberMouseClicked
-       if(txtHaber.hasFocus()==true){
-           txtHaber.setEditable(true);
-           txtHaber.setText("");
+        if (txtHaber.hasFocus() == true) {
+            txtHaber.setEditable(true);
+            txtHaber.setText("");
             txtDebe.setText("0");
             txtDebe.setEditable(false);
         }
     }//GEN-LAST:event_txtHaberMouseClicked
 
     private void txtDebeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtDebeMouseClicked
-        if(txtDebe.hasFocus()==true){
+        if (txtDebe.hasFocus() == true) {
             txtDebe.setEditable(true);
             txtDebe.setText("");
             txtHaber.setText("0");
@@ -421,7 +451,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_txtHaberActionPerformed
 
     private void datePickerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_datePickerMouseClicked
-        
+
     }//GEN-LAST:event_datePickerMouseClicked
 
     /**
