@@ -265,7 +265,7 @@ public class Vista extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Debe ingresar una fecha");
 
         } else if (debe < 0 || haber < 0) {
-            JOptionPane.showMessageDialog(null, "Error");
+            JOptionPane.showMessageDialog(null, "Error, los números deben ser positivos");
         } else {
             DateFormat fechDatePicker = new SimpleDateFormat("dd-MM-yyyy");   //Dar formato a tipo fecha(Date) para obtener de datePicker y colocarla en jtable 
 
@@ -319,7 +319,9 @@ public class Vista extends javax.swing.JFrame {
         //En proceso
         if (totalDebe == totalHaber && totalDebe > 0 && totalHaber > 0) {
             JOptionPane.showMessageDialog(null, "Cierre exitoso");
+            
             /*DEJA UNA LINEA VACIA PARA COMENZAR OTRO ASIENTO*/
+            /*
             String[] s = new String[5];
 
             s[0] = ("");
@@ -330,7 +332,7 @@ public class Vista extends javax.swing.JFrame {
 
             modelo.addRow(s);
             t = 0;
-
+*/
             /*SETEAR VALOR DE REF SECUENCIAL*/
             ref++;
             int acu = ref;
@@ -355,8 +357,8 @@ public class Vista extends javax.swing.JFrame {
         double debeCaja;
         double haberCaja;
          */
-        ArrayList<Double> deb = new ArrayList<>();
-        ArrayList<Double> hab = new ArrayList<>();
+        //ArrayList<Double> deb = new ArrayList<>();
+        //ArrayList<Double> hab = new ArrayList<>();
 
         /*
         for (int i = 0; i < modelo.getRowCount(); i++) {
@@ -389,8 +391,9 @@ public class Vista extends javax.swing.JFrame {
     public void buscar() {
         ArrayList<Double> arrCajHaber = new ArrayList<>();
         ArrayList<Double> arrCajDebe = new ArrayList<>();
-                            ArrayList<Double> arrAccHaber = new ArrayList<>();
-                    ArrayList<Double> arrAccDebe = new ArrayList<>();
+        ArrayList<Double> arrAccHaber = new ArrayList<>();
+        ArrayList<Double> arrAccDebe = new ArrayList<>();
+        
 
         String arr[] = {"Debe", "Haber"};
         double debe;
@@ -403,7 +406,6 @@ public class Vista extends javax.swing.JFrame {
             switch (cuenta) {
 
                 case "Caja":
-
                     debe = (double) modelo.getValueAt(i, 3);
                     haber = (double) modelo.getValueAt(i, 4);
                     if (debe != 0.0) {
@@ -415,7 +417,6 @@ public class Vista extends javax.swing.JFrame {
                     ;
                     break;
                 case "Acciones":
-
                     debe = (double) modelo.getValueAt(i, 3);
                     haber = (double) modelo.getValueAt(i, 4);
                     if (debe != 0.0) {
@@ -432,8 +433,6 @@ public class Vista extends javax.swing.JFrame {
             }
         }
 
-        
-        
         for (int i = 0; i < arrCajHaber.size(); i++) {                  //imprimir valores del primer array al lado del otro
             if(i==0){
                 System.out.println("Caja");
@@ -449,6 +448,7 @@ public class Vista extends javax.swing.JFrame {
             System.out.println(arrAccHaber.get(i) + "   " + arrAccDebe.get(i));
         }
         
+        
     }
     private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
 
@@ -457,7 +457,7 @@ public class Vista extends javax.swing.JFrame {
     private void txtHaberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtHaberMouseClicked
         if (txtHaber.hasFocus() == true) {
             txtHaber.setEditable(true);
-            txtHaber.setText("");
+            //txtHaber.setText("");
             txtDebe.setText("0");
             txtDebe.setEditable(false);
         }
@@ -504,7 +504,8 @@ public class Vista extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Solo debe escribir números");
            txtHaber.setText("0");
 
-        } 
+        }
+        
     }//GEN-LAST:event_txtHaberKeyTyped
 
     /**
