@@ -291,6 +291,8 @@ public class Vista extends javax.swing.JFrame {
             }
 
             modelo.addRow(ingresos);                                //se agrega el vector a la fila
+            int auxRef =(Integer.parseInt(txtRef.getText()) + 1);
+            txtRef.setText("" + auxRef);
         }
         /*RESETEAR VALORES DE TEXTFIELDS HABER Y DEBE*/
         txtDebe.setText("0");
