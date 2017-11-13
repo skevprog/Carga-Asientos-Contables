@@ -14,6 +14,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -69,7 +71,6 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         btnCerrarAsiento = new javax.swing.JButton();
         datePicker = new org.jdesktop.swingx.JXDatePicker();
@@ -150,8 +151,11 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable);
 
         jButton1.setText("Nuevo Libro");
-
-        jButton2.setText("Editar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         btnImprimir.setText("Imprimir Mayor");
         btnImprimir.addActionListener(new java.awt.event.ActionListener() {
@@ -184,11 +188,9 @@ public class Vista extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnCerrarAsiento, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -246,7 +248,6 @@ public class Vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCerrarAsiento)
-                    .addComponent(jButton2)
                     .addComponent(btnImprimir)
                     .addComponent(jButton1))
                 .addGap(26, 26, 26))
@@ -352,102 +353,133 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_txtRefActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        /*
-        String arr[] = {"Debe", "Haber"};
-        double debeCaja;
-        double haberCaja;
-         */
-        //ArrayList<Double> deb = new ArrayList<>();
-        //ArrayList<Double> hab = new ArrayList<>();
-
-        /*
-        for (int i = 0; i < modelo.getRowCount(); i++) {
-
+            /*
+            String arr[] = {"Debe", "Haber"};
+            double debeCaja;
+            double haberCaja;
+            */
+            //ArrayList<Double> deb = new ArrayList<>();
+            //ArrayList<Double> hab = new ArrayList<>();
+            
+            /*
+            for (int i = 0; i < modelo.getRowCount(); i++) {
+            
             if (modelo.getValueAt(i, 2).equals("Caja")) {
-                if (i == 0) {
-                    System.out.print(arr[0] + "  " + arr[1]);
-                    System.out.println("");
-                }
-                debeCaja = (double) modelo.getValueAt(i, 3);
-                haberCaja = (double) modelo.getValueAt(i, 4);
-                if (debeCaja != 0.0) {
-                    deb.add(debeCaja);
-                }
-                if (haberCaja != 0) {
-                    hab.add(haberCaja);
-                }
+            if (i == 0) {
+            System.out.print(arr[0] + "  " + arr[1]);
+            System.out.println("");
+            }
+            debeCaja = (double) modelo.getValueAt(i, 3);
+            haberCaja = (double) modelo.getValueAt(i, 4);
+            if (debeCaja != 0.0) {
+            deb.add(debeCaja);
+            }
+            if (haberCaja != 0) {
+            hab.add(haberCaja);
+            }
             }
             
-        }
-
-        for (int i = 0; i < deb.size(); i++) {                  //imprimir valores del primer array al lado del otro
+            }
+            
+            for (int i = 0; i < deb.size(); i++) {                  //imprimir valores del primer array al lado del otro
             System.out.println(deb.get(i) + "   " + hab.get(i));
-        }
-         */
-        buscar();
+            }
+            */
+            buscar();
+
 
 
     }//GEN-LAST:event_btnImprimirActionPerformed
-    public void buscar() {
-        ArrayList<Double> arrCajHaber = new ArrayList<>();
-        ArrayList<Double> arrCajDebe = new ArrayList<>();
-        ArrayList<Double> arrAccHaber = new ArrayList<>();
-        ArrayList<Double> arrAccDebe = new ArrayList<>();
+    public void buscar()  {
         
-
-        String arr[] = {"Debe", "Haber"};
-        double debe;
-        double haber;
+        ArrayList<Mayor> tabla = new ArrayList();
+        for (int i = 0; i < 16; i++) {
+            tabla.add(new Mayor(modelo));
+        }
 
         for (int i = 0; i < modelo.getRowCount(); i++) {
-
+            
             String cuenta = (String) modelo.getValueAt(i, 2);
 
             switch (cuenta) {
 
                 case "Caja":
-                    debe = (double) modelo.getValueAt(i, 3);
-                    haber = (double) modelo.getValueAt(i, 4);
-                    if (debe != 0.0) {
-                        arrCajHaber.add(debe);
-                    }
-                    if (haber != 0) {
-                        arrCajDebe.add(haber);
-                    }
-                    ;
+                    tabla.get(0).cuenta = "Caja";
+                    tabla.get(0).llenar(i);
+                    break;
+                case "Banco Cuenta Corriente":
+                    tabla.get(1).cuenta = "Banco Cuenta Corriente";
+                    tabla.get(1).llenar(i);
                     break;
                 case "Acciones":
-                    debe = (double) modelo.getValueAt(i, 3);
-                    haber = (double) modelo.getValueAt(i, 4);
-                    if (debe != 0.0) {
-                        arrAccHaber.add(debe);
-                    }
-                    if (haber != 0) {
-                        arrAccDebe.add(haber);
-                    }
-                    ;
+                    tabla.get(2).cuenta = "Acciones";
+                    tabla.get(2).llenar(i);
                     break;
-                    
+                case "Inmuebles":
+                    tabla.get(3).cuenta = "Inmuebles";
+                    tabla.get(3).llenar(i);
+                    break;
+                case "Deudores por ventas":
+                    tabla.get(4).cuenta = "Deudores por ventas";
+                    tabla.get(4).llenar(i);
+                    break;
+                case "Alquileres a cobrar":
+                    tabla.get(5).cuenta = "Alquileres a cobrar";
+                    tabla.get(5).llenar(i);
+                    break;
+                case "Rodado":
+                    tabla.get(6).cuenta = "Rodado";
+                    tabla.get(6).llenar(i);
+                    break;
+                case "Mercaderias":
+                    tabla.get(7).cuenta = "Mercaderias";
+                    tabla.get(7).llenar(i);
+                    break;
+                case "Proveedor":
+                    tabla.get(8).cuenta = "Proveedor";
+                    tabla.get(8).llenar(i);
+                    break;
+                case "Documentos a pagar":
+                    tabla.get(9).cuenta = "Documentos a pagar";
+                    tabla.get(9).llenar(i);
+                    break;
+                case "Sueldos a pagar":
+                    tabla.get(10).cuenta = "Sueldos a pagar";
+                    tabla.get(10).llenar(i);
+                    break;
+                case "Acreedores varios":
+                    tabla.get(11).cuenta = "Acreedores varios";
+                    tabla.get(11).llenar(i);
+                    break;
+                   
                 default: System.out.println("error");
                 break;
             }
         }
 
-        for (int i = 0; i < arrCajHaber.size(); i++) {                  //imprimir valores del primer array al lado del otro
-            if(i==0){
-                System.out.println("Caja");
+        for (int i = 0; i < tabla.size(); i++) {                  //imprime valores de debe y haber bajo la cuenta
+            if (tabla.get(i).cuenta!= null) {
+                
+            
+            System.out.println(tabla.get(i).cuenta);
+            
+                for (int j = 0; j < tabla.get(i).haber.size(); j++) {
+                    
+                    System.out.println(tabla.get(i).debe.get(j) + " " + tabla.get(i).haber.get(j) );
+                }
+
             }
-            System.out.println(arrCajHaber.get(i) + "   " + arrCajDebe.get(i));
         }
 
         
-        for (int i = 0; i < arrAccHaber.size(); i++) {                  //imprimir valores del primer array al lado del otro
-            if(i==0){
-                System.out.println("Acciones");
-            }
-            System.out.println(arrAccHaber.get(i) + "   " + arrAccDebe.get(i));
-        }
         
+//        ExportExcel exportar = new ExportExcel();
+//        try {
+//            exportar.writeXLSXFile(modelo);
+//        } catch (IOException ex) {
+//            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+
         
     }
     private void txtDebeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDebeActionPerformed
@@ -508,6 +540,12 @@ public class Vista extends javax.swing.JFrame {
         
     }//GEN-LAST:event_txtHaberKeyTyped
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        modelo.setRowCount(0);
+        txtRef.setText("1");
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -550,7 +588,6 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbCuentas;
     private org.jdesktop.swingx.JXDatePicker datePicker;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
